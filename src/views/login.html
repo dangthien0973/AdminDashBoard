@@ -82,10 +82,7 @@
                     <input ng-model="objLogin.password" class="form-control" type="password" placeholder="Password">
                   </div>
                   <div class="row">
-                    <div ng-hide="model.isShow = true" class="alert alert-success" role="alert">
-                      {{ model.message}}
-                    </div>
-                    <div ng-hide="model.isShowError =true" class="alert alert-danger" role="alert">
+                    <div ng-hide="model.isShowError" class="alert alert-danger" role="alert">
                       {{model.message}}
                     </div>
                   </div>
@@ -119,26 +116,33 @@
     <script src="node_modules/simplebar/dist/simplebar.min.js"></script>
     <script>
       var app = angular.module('myApp', []);
-      app.controller('myCtrl', function ($scope, $http) {
+      app.controller('myCtrl', function ($scope, $http, $window) {
+
         $scope.model = {};
+        $scope.model.isShowError = true;
         $scope.objLogin = {};
         $scope.Login = function () {
           var data = {
             username: $scope.objLogin.userName,
             password: $scope.objLogin.password,
           };
-          console.log(data);
           $http.post('http://localhost:8012/api/auth/login', JSON.stringify(data)).then(function (response) {
-            if (response.data) {
-              console.log(response.data.status)
-              if (response.data.status == 200) {
-                // nếu thành công trả về
-                sessionStorage.setItem("emp-key", response.data.email);
-                console.log(sessionStorage.getItem("emp-key"));
+            if (response.data.status == 200) {
+                sessionStorage.setItem("loginKey", response.data.email);
+                $scope.model.isShowError = true;
+                $window.location.href = '/index.html';
               }
-            }
           }, function (response) {
-
+            console.log(response.data)
+              if (response.data.status == 200) {
+                sessionStorage.setItem("loginKey", response.data.email);
+                $scope.model.isShowError = true;
+              }
+              else
+              {
+                $scope.model.message ="Tài khoản hoặc mật khẩu không chính xác !"
+                $scope.model.isShowError = false;
+              }
           });
 
         }

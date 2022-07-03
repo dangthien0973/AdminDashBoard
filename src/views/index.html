@@ -55,8 +55,10 @@
       gtag('config', 'UA-118965717-5');
     </script>
     <link href="node_modules/@coreui/chartjs/dist/css/coreui-chartjs.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
   </head>
   <body>
+    <div ng-app="myApp" ng-controller="myCtrl">
     <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
       <div class="sidebar-brand d-none d-md-flex">
         <svg class="sidebar-brand-full" width="118" height="46" alt="CoreUI Logo">
@@ -1038,6 +1040,7 @@
         <div class="ms-auto">Powered by&nbsp;<a href="https://coreui.io/docs/">CoreUI UI Components</a></div>
       </footer>
     </div>
+  </div>
     <!-- CoreUI and necessary plugins-->
     <script src="node_modules/@coreui/coreui/dist/js/coreui.bundle.min.js"></script>
     <script src="node_modules/simplebar/dist/simplebar.min.js"></script>
@@ -1047,6 +1050,11 @@
     <script src="node_modules/@coreui/utils/dist/coreui-utils.js"></script>
     <script src="js/main.js"></script>
     <script> 
+     var app = angular.module('myApp', []);
+    app.controller('myCtrl', function ($scope, $http) {
+      sessionStorage.getItem("loginKey");
+      console.log(sessionStorage.getItem("loginKey"));
+    });
     </script>
   </body>
 </html>

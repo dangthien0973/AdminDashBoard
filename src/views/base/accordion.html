@@ -532,9 +532,9 @@
                     <h2>User <b>Management</b></h2>
                   </div>
                   <div class="col-xs-7">
-                    <a class="btn btn-primary" ng-click="hello()"><i class="material-icons">&#xE147;</i> <span>Add New
+                    <a class="btn btn-primary" ng-click="ExportExcel()"><i class="material-icons">&#xE147;</i> <span>Add New
                         User</span></a>
-                    <a href="#" class="btn btn-primary"><i class="material-icons">&#xE24D;</i> <span>Export to
+                    <a  ng-click="ExportExcel()" class="btn btn-primary"><i class="material-icons">&#xE24D;</i> <span>Export to
                         Excel</span></a>
                   </div>
                 </div>
@@ -551,69 +551,12 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td><a href="#"><img src="/examples/images/avatar/1.jpg" class="avatar" alt="Avatar"> Michael
-                        Holz</a></td>
-                    <td>04/10/2013</td>
-                    <td>Admin</td>
-                    <td><span class="status text-success">&bull;</span> Active</td>
-                    <td>
-                      <a href="#" class="settings" title="Settings" data-toggle="tooltip"><i
-                          class="material-icons">&#xE8B8;</i></a>
-                      <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i
-                          class="material-icons">&#xE5C9;</i></a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td><a href="#"><img src="/examples/images/avatar/2.jpg" class="avatar" alt="Avatar"> Paula
-                        Wilson</a></td>
-                    <td>05/08/2014</td>
-                    <td>Publisher</td>
-                    <td><span class="status text-success">&bull;</span> Active</td>
-                    <td>
-                      <a href="#" class="settings" title="Settings" data-toggle="tooltip"><i
-                          class="material-icons">&#xE8B8;</i></a>
-                      <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i
-                          class="material-icons">&#xE5C9;</i></a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td><a href="#"><img src="/examples/images/avatar/3.jpg" class="avatar" alt="Avatar"> Antonio
-                        Moreno</a></td>
-                    <td>11/05/2015</td>
-                    <td>Publisher</td>
-                    <td><span class="status text-danger">&bull;</span> Suspended</td>
-                    <td>
-                      <a href="#" class="settings" title="Settings" data-toggle="tooltip"><i
-                          class="material-icons">&#xE8B8;</i></a>
-                      <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i
-                          class="material-icons">&#xE5C9;</i></a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>4</td>
-                    <td><a href="#"><img src="/examples/images/avatar/4.jpg" class="avatar" alt="Avatar"> Mary
-                        Saveley</a></td>
-                    <td>06/09/2016</td>
-                    <td>Reviewer</td>
-                    <td><span class="status text-success">&bull;</span> Active</td>
-                    <td>
-                      <a href="#" class="settings" title="Settings" data-toggle="tooltip"><i
-                          class="material-icons">&#xE8B8;</i></a>
-                      <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i
-                          class="material-icons">&#xE5C9;</i></a>
-                    </td>
-                  </tr>
-                  <tr>
+                  <tr  ng-repeat="user in model.listUser">
                     <td>5</td>
-                    <td><a href="#"><img src="/examples/images/avatar/5.jpg" class="avatar" alt="Avatar"> Martin
-                        Sommer</a></td>
-                    <td>12/08/2017</td>
-                    <td>Moderator</td>
-                    <td><span class="status text-warning">&bull;</span> Inactive</td>
+                    <td><a href="#"><img src="/examples/images/avatar/5.jpg" class="avatar" alt="Avatar"> {{user.userName}}</a></td>
+                    <td>{{user.createdBy}}</td>
+                    <td>{{user.roles[0].name}}</td>
+                    <td><span class="status text-warning">&bull;</span> {{user.statuss}}</td>
                     <td>
                       <a href="#" class="settings" title="Settings" data-toggle="tooltip"><i
                           class="material-icons">&#xE8B8;</i></a>
@@ -624,15 +567,9 @@
                 </tbody>
               </table>
               <div class="clearfix">
-                <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
-                <ul class="pagination">
-                  <li class="page-item disabled"><a href="#">Previous</a></li>
-                  <li class="page-item"><a href="#" class="page-link">1</a></li>
-                  <li class="page-item"><a href="#" class="page-link">2</a></li>
-                  <li class="page-item active"><a href="#" class="page-link">3</a></li>
-                  <li class="page-item"><a href="#" class="page-link">4</a></li>
-                  <li class="page-item"><a href="#" class="page-link">5</a></li>
-                  <li class="page-item"><a href="#" class="page-link">Next</a></li>
+                <div class="hint-text">Showing<b>{{model.showPage}}</b> out of <b>{{model.totalPage}}</b> entries</div>
+                <ul class="pagination" ng-repeat="x in [].constructor(4) track by $index" >
+                  <li class="page-item"><a ng-click="loadUser($index)" class="page-link">{{$index +1}}</a></li>
                 </ul>
               </div>
             </div>
@@ -645,6 +582,7 @@
         <div class="ms-auto">Powered by&nbsp;<a href="https://coreui.io/docs/">CoreUI UI Components</a></div>
       </footer>
     </div>
+    
   </div>
   <!-- CoreUI and necessary plugins-->
   <script src="node_modules/@coreui/coreui/dist/js/coreui.bundle.min.js"></script>
@@ -652,20 +590,30 @@
   <script>
     var app = angular.module('myApp', []);
     app.controller('myCtrl', function ($scope, $http) {
-      $scope.hello = function () {
-        var data = {
-          name: name,
-          age: age,
-          adress: adress
-        };
-        $http.post('/api/users/post', JSON.stringify(data)).then(function (response) {
-          if (response.data)
-            $scope.msg = "Post Data Submitted Successfully!";
-        }, function (response) {
-         console.log(response);
-        });
+      $scope.model = {};
+      $scope.model.listUser = [];
+      $scope.model.index= 0;
+      $scope.model.totalPage = 1;
+      $scope.model.showPage = 0;
+      $scope.number = 0;
+      $scope.loadUser =function(index){
+        $scope.model.index =index;
+        var data ={};
+          $http.post('http://localhost:8012/api/auth/getAllUser?pageIndex='+$scope.model.index, JSON.stringify(data)).then(function (response) {
+            if(response){
+              if(response.data.status == 200)
+              {
+                $scope.model.listUser = response.data.data.content;
+                $scope.number =response.data.data.totalPages;
+                $scope.model.showPage=response.data.data.numberOfElements;
+                console.log( $scope.model.totalPage);
+              }
+            }
+          }, function (response) {
+          
+          });
       }
-
+      $scope.loadUser(0);
     });
   </script>
 </body>
