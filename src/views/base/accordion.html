@@ -1,13 +1,4 @@
 <!DOCTYPE html>
-<!--
-* CoreUI - Free Bootstrap Admin Template
-* @version v4.1.1
-* @link https://coreui.io
-* Copyright (c) 2022 creativeLabs Łukasz Holeczek
-* Licensed under MIT (https://coreui.io/license)
--->
-
-<!-- Breadcrumb-->
 <html lang="en">
 
 <head>
@@ -600,25 +591,54 @@
         <div class="ms-auto">Powered by&nbsp;<a href="https://coreui.io/docs/">CoreUI UI Components</a></div>
       </footer>
     </div>
+    <!-- Modal Sửa thông tin -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Sửa thông tin user :</h5>
+            <button type="button" class="btn-close" data-coreui-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Tên người dùng:</label>
+                <input ng-model="objectEditUser.customerName" type="text" class="form-control" >
+              </div>
+              <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Email:</label>
+                <input ng-model="objectEditUser.email" type="text" class="form-control" >
+              </div>
+              <div class="mb-3">
+                <label for="message-text" class="col-form-label">Chọn lại quyền :</label>
+                <select ng-model ="objectEditUser.RoleAdmin"  class="form-select" aria-label="Default select example"  >
+                  <option ng-value="0">User</option>
+                  <option ng-value="1">Cộng tác viên</option>
+                  <option ng-value="3">Admin</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Kích hoạt người dùng:</label>
+                <input type="checkbox" ng-model="objectEditUser.enabled" >
+              </div>
+              <div class="mb-3">
+                <label for="message-text" class="col-form-label">Upload lại hình :</label>
+                <input type="file" name="" id="fileId" onchange="Uploaded()">
+              </div>
+    
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-coreui-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Send message</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <!-- CoreUI and necessary plugins-->
   <script src="node_modules/@coreui/coreui/dist/js/coreui.bundle.min.js"></script>
   <script src="node_modules/simplebar/dist/simplebar.min.js"></script>
-  <script>
-    var base64String = "";
-    function Uploaded() {
-      var file = document.querySelector(
-        'input[type=file]')['files'][0];
-      var reader = new FileReader();
-      reader.onload = function () {
-        base64String = reader.result.replace("data:", "")
-          .replace(/^.+,/, "");
-        imageBase64Stringsep = base64String;
-        console.log(imageBase64Stringsep);
-      }
-      reader.readAsDataURL(file);
-    }
-  </script>
   <script>
     var app = angular.module('myApp', []);
     app.controller('myCtrl', function ($scope, $http) {
@@ -628,6 +648,7 @@
       $scope.model.totalPage = 1;
       $scope.model.showPage = 0;
       $scope.number = 0;
+      $scope.objectEditUser ={};
       var base64String = "";
       $scope.loadUser = function (index) {
         $scope.model.index = index;
@@ -646,9 +667,15 @@
       $scope.EditUser = function (user) {
       var data = {};
         $('#exampleModal').modal('show');
+        $scope.objectEditUser = user;
+        console.log( $scope.objectEditUser);
+        console.log( $scope.objectEditUser.roles[0].id)
+        $scope.objectEditUser.RoleAdmin = $scope.objectEditUser.roles[0].id;
+        
       }
       $scope.DeleteUser = function (id) {
-        $scope.model.index = index;
+        if (confirm(" Bạn có chắc chắn muốn user này không ? !") == true) {
+        $scope.model.index = id;
         var data = {};
         $http.post('http://localhost:8012/api/auth/DeleteUser?id='+$scope.model.index, JSON.stringify(data)).then(function (response) {
           if (response) {
@@ -656,10 +683,22 @@
               $scope.model.listUser = response.data.data.content;
               $scope.number = response.data.data.totalPages;
               $scope.model.showPage = response.data.data.numberOfElements;
+              $('.alert').alert();
+              $scope.loadUser(0);
             }
           }
         }, function (response) {
         })
+      }
+      
+      }
+      $scope.Export = function () {
+                $("#tblCustomers").table2excel({
+                    filename: "Table.xls"
+        });
+      }
+      $scope.Delete = function () {
+       
       }
       $scope.loadUser(0);
       
@@ -668,47 +707,9 @@
   <script>
   </script>
 </body>
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Sửa thông tin user :</h5>
-        <button type="button" class="btn-close" data-coreui-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="mb-3">
-            <label for="recipient-name" class="col-form-label">Tên người dùng:</label>
-            <input ng-model="objectEditUser.customerName" type="text" class="form-control" id="recipient-name">
-          </div>
-          <div class="mb-3">
-            <label for="message-text" class="col-form-label">Message:</label>
-            <select ng-model ="objectEditUser.RoleAdmin" class="form-select" aria-label="Default select example">
-              <option value="0">User</option>
-              <option value="1">Cộng tác viên</option>
-              <option value="2">Admin</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="recipient-name" class="col-form-label">Kích hoạt người dùng:</label>
-            <input type="checkbox" ng-model="objectEditUser.enabled" class="form-control" id="recipient-name">
-          </div>
-          <div class="mb-3">
-            <label for="message-text" class="col-form-label">Upload lại hình :</label>
-            <input type="file" name="" id="fileId" onchange="Uploaded()">
-          </div>
-          <div>
 
-          </div>
-
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-coreui-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Send message</button>
-      </div>
-    </div>
-  </div>
+<div id="toastSuccess" class="alert alert-success" role="alert">
+  This is a success alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
 </div>
 
 </html>
