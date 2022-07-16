@@ -518,7 +518,7 @@
               </div>
               <div class="mb-3">
                 <label for="message-text" class="col-form-label">Upload lại hình :</label>
-                <input type="file" name="" id="fileId" onchange="Uploaded()">
+                <input type="file" name="" id="fileId" ng-change="imageUploaded()">
               </div>
     
             </form>
@@ -565,6 +565,7 @@
         $scope.objectEditUser = user;
       }
       $scope.saveEditUser =function(){
+        $scope.objectEditUsertoSave ={};
         $scope.objectEditUser.RoleAdmin = $scope.objectEditUser.roles[0].id;
         $scope.objectEditUser.role =[];
         if( $scope.objectEditUser.RoleAdmin == 1){
@@ -576,11 +577,9 @@
         if( $scope.objectEditUser.RoleAdmin == 3){
           $scope.objectEditUser.role.push('user')
         }
-        var data =  $scope.objectEditUser ;
-        console.log(data);
+        var data =   $scope.objectEditUser;
         $http.post('http://localhost:8012/api/auth/UpdateUser', JSON.stringify(data)).then(function (response) {
           if (response) {
-            console.log(response)
             if (response.data.status == 200) {
               
             }
@@ -612,9 +611,29 @@
                     filename: "Table.xls"
         });
       }
-      $scope.Delete = function () {
+     // theme anrh
+     function imageUploaded() {
+    var file = document.querySelector(
+        'input[type=file]')['files'][0];
+  
+    var reader = new FileReader();
+    console.log("next");
       
-      }
+    reader.onload = function () {
+        base64String = reader.result.replace("data:", "")
+            .replace(/^.+,/, "");
+  
+        imageBase64Stringsep = base64String;
+  
+        // alert(imageBase64Stringsep);
+        console.log(base64String);
+    }
+    reader.readAsDataURL(file);
+}
+function displayString() {
+    console.log("Base64String about to be printed");
+    alert(base64String);
+}
       $scope.loadUser(0);
       
     });
