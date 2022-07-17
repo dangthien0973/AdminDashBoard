@@ -45,6 +45,7 @@
     <link href="css/examples.css" rel="stylesheet">
     <!-- Global site tag (gtag.js) - Google Analytics-->
     <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-118965717-3"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -57,6 +58,7 @@
     <link href="node_modules/@coreui/chartjs/dist/css/coreui-chartjs.css" rel="stylesheet">
   </head>
   <body>
+    <div ng-app="myApp" ng-controller="myCtrl">
     <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
       <div class="sidebar-brand d-none d-md-flex">
         <svg class="sidebar-brand-full" width="118" height="46" alt="CoreUI Logo">
@@ -208,32 +210,6 @@
           <div class="row row-cols-2">
             <div class="col">
               <div class="card mb-4">
-                <div class="card-header"><strong>Chart</strong><span class="small ms-1">Line</span></div>
-                <div class="card-body">
-                  <div class="example">
-                    <ul class="nav nav-tabs" role="tablist">
-                      <li class="nav-item"><a class="nav-link active" data-coreui-toggle="tab" href="#preview-219" role="tab">
-                          <svg class="icon me-2">
-                            <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-media-play"></use>
-                          </svg>Preview</a></li>
-                      <li class="nav-item"><a class="nav-link" href="http://www.chartjs.org/" target="_blank">
-                          <svg class="icon me-2">
-                            <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-code"></use>
-                          </svg>Code</a></li>
-                    </ul>
-                    <div class="tab-content rounded-bottom">
-                      <div class="tab-pane p-3 active preview" role="tabpanel" id="preview-219">
-                        <div class="c-chart-wrapper">
-                          <canvas id="canvas-1"></canvas>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col">
-              <div class="card mb-4">
                 <div class="card-header"><strong>Chart</strong><span class="small ms-1">Bar</span></div>
                 <div class="card-body">
                   <div class="example">
@@ -259,24 +235,18 @@
               </div>
             </div>
             <div class="col">
-              <div class="card mb-4">
-                <div class="card-header"><strong>Chart</strong><span class="small ms-1">Doughnut</span></div>
+              <div class="card mb-12">
+                <div class="card-header"><strong>Chart</strong><span class="small ms-1">Thống kê lưu lượng đăng kí </span></div>
                 <div class="card-body">
                   <div class="example">
                     <ul class="nav nav-tabs" role="tablist">
                       <li class="nav-item"><a class="nav-link active" data-coreui-toggle="tab" href="#preview-878" role="tab">
-                          <svg class="icon me-2">
-                            <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-media-play"></use>
-                          </svg>Preview</a></li>
-                      <li class="nav-item"><a class="nav-link" href="http://www.chartjs.org/" target="_blank">
-                          <svg class="icon me-2">
-                            <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-code"></use>
-                          </svg>Code</a></li>
                     </ul>
                     <div class="tab-content rounded-bottom">
                       <div class="tab-pane p-3 active preview" role="tabpanel" id="preview-878">
                         <div class="c-chart-wrapper">
-                          <canvas id="canvas-3"></canvas>
+                          <canvas id="myChart" width="400" height="400"></canvas>
+                        </canvas> 
                         </div>
                       </div>
                     </div>
@@ -284,84 +254,7 @@
                 </div>
               </div>
             </div>
-            <div class="col">
-              <div class="card mb-4">
-                <div class="card-header"><strong>Chart</strong><span class="small ms-1">Radar</span></div>
-                <div class="card-body">
-                  <div class="example">
-                    <ul class="nav nav-tabs" role="tablist">
-                      <li class="nav-item"><a class="nav-link active" data-coreui-toggle="tab" href="#preview-799" role="tab">
-                          <svg class="icon me-2">
-                            <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-media-play"></use>
-                          </svg>Preview</a></li>
-                      <li class="nav-item"><a class="nav-link" href="http://www.chartjs.org/" target="_blank">
-                          <svg class="icon me-2">
-                            <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-code"></use>
-                          </svg>Code</a></li>
-                    </ul>
-                    <div class="tab-content rounded-bottom">
-                      <div class="tab-pane p-3 active preview" role="tabpanel" id="preview-799">
-                        <div class="c-chart-wrapper">
-                          <canvas id="canvas-4"></canvas>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col">
-              <div class="card mb-4">
-                <div class="card-header"><strong>Chart</strong><span class="small ms-1">Pie</span></div>
-                <div class="card-body">
-                  <div class="example">
-                    <ul class="nav nav-tabs" role="tablist">
-                      <li class="nav-item"><a class="nav-link active" data-coreui-toggle="tab" href="#preview-1066" role="tab">
-                          <svg class="icon me-2">
-                            <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-media-play"></use>
-                          </svg>Preview</a></li>
-                      <li class="nav-item"><a class="nav-link" href="http://www.chartjs.org/" target="_blank">
-                          <svg class="icon me-2">
-                            <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-code"></use>
-                          </svg>Code</a></li>
-                    </ul>
-                    <div class="tab-content rounded-bottom">
-                      <div class="tab-pane p-3 active preview" role="tabpanel" id="preview-1066">
-                        <div class="c-chart-wrapper">
-                          <canvas id="canvas-5"></canvas>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col">
-              <div class="card mb-4">
-                <div class="card-header"><strong>Chart</strong><span class="small ms-1">Polar Area</span></div>
-                <div class="card-body">
-                  <div class="example">
-                    <ul class="nav nav-tabs" role="tablist">
-                      <li class="nav-item"><a class="nav-link active" data-coreui-toggle="tab" href="#preview-871" role="tab">
-                          <svg class="icon me-2">
-                            <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-media-play"></use>
-                          </svg>Preview</a></li>
-                      <li class="nav-item"><a class="nav-link" href="http://www.chartjs.org/" target="_blank">
-                          <svg class="icon me-2">
-                            <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-code"></use>
-                          </svg>Code</a></li>
-                    </ul>
-                    <div class="tab-content rounded-bottom">
-                      <div class="tab-pane p-3 active preview" role="tabpanel" id="preview-871">
-                        <div class="c-chart-wrapper">
-                          <canvas id="canvas-6"></canvas>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>
@@ -370,13 +263,93 @@
         <div class="ms-auto">Powered by&nbsp;<a href="https://coreui.io/docs/">CoreUI UI Components</a></div>
       </footer>
     </div>
+  </div>
     <!-- CoreUI and necessary plugins-->
     <script src="node_modules/@coreui/coreui/dist/js/coreui.bundle.min.js"></script>
     <script src="node_modules/simplebar/dist/simplebar.min.js"></script>
     <script src="node_modules/chart.js/dist/chart.min.js"></script>
     <script src="node_modules/@coreui/chartjs/dist/js/coreui-chartjs.js"></script>
     <script src="js/charts.js"></script>
+    <script src="src\js\angular-chart.min.js"></script>
+   
     <script> 
+     var app = angular.module('myApp', []);
+    app.controller('myCtrl', function ($scope, $http) {
+      $scope.model = {};
+      $scope.model.listUsertoChart = [];
+      $scope.model.listUsertoCharttoShow =[];
+      $scope.model.listUsertoCharttoShowtesst =[1,20,2,4,1,3,12,23,1,2,3,4,3];
+      $scope.loadUsertoChart = function () {
+        var data = {};
+        $http.post('http://localhost:8012/api/auth/GetAllUserToChart', JSON.stringify(data)).then(function (response) {
+          if (response) {
+            if (response.data.status == 200) {
+              $scope.model.listUsertoChart = response.data.data;
+              $scope.model.listUsertoCharttoShow.count =0;
+              // console.log($scope.model.listUsertoChart)
+             for(var i =0;i< $scope.model.listUsertoChart.length;i ++){
+              for(var j =i+1 ;j <$scope.model.listUsertoChart.length ;j ++){
+                if($scope.model.listUsertoChart[i].month == $scope.model.listUsertoChart[j].month){
+                  $scope.model.listUsertoCharttoShow.count ++ ;
+                }
+              }
+             }
+             console.log($scope.model.listUsertoCharttoShow.count);
+            }
+          }
+        }, function (response) {
+        });
+      }
+      $scope.loadUsertoChart();
+  const ctx = document.getElementById('myChart');
+  const myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['1', '2', '3', '4', '5', '6', '7','8','9','10','11','12'],
+        datasets: [{
+            label: '# Lưu lượng người đăng kí',
+            data: $scope.model.listUsertoCharttoShowtesst ,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+    });
+    
     </script>
   </body>
 </html>
