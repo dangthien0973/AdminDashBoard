@@ -265,49 +265,43 @@
       $scope.model = {};
       $scope.model.listUsertoChart = [];
       $scope.model.listUsertoCharttoShow = [];
-      $scope.model.listUsertoCharttoShowChart = [];
+      $scope.listUsertoCharttoShowChart1 = [];
       var count = 0;
       var datatest = [];
       $scope.loadUsertoChart = function () {
+        $scope.listUsertoCharttoShowChart = [];
         var data = {};
         $http.post('http://localhost:8012/api/auth/GetAllUserToChart', JSON.stringify(data)).then(function (response) {
           if (response) {
             if (response.data.status == 200) {
               $scope.model.listUsertoChart = response.data.data;
-              if($scope.model.listUsertoChart.length > 0){
-              console.log($scope.model.listUsertoChart);
-              $scope.loadAsyn($scope.model.listUsertoChart);
+              if ($scope.model.listUsertoChart.length > 0) {
+                load($scope.model.listUsertoChart);
               }
             }
           }
-        }, function (response) {
         });
       }
-      $scope.loadAsyn =function(lst) {
-        for (var i = 0; i < 12; i++) {
-          var count =0;
-          $scope.object ={};
-          count = lst.reduce((accumulator, obj) => {
-            if (obj.month == i) {
-              return accumulator + 1;
-            }
-            return accumulator;
-          }, 0);
-          $scope.object.countUser = count;
-          console.log(object.countUser)
-          $scope.model.listUsertoCharttoShowChart.push($scope.object);
-        }
-      }
-      $scope.loadUsertoChart();
-      console.log($scope.model.listUsertoCharttoShowChart);
-      const ctx = document.getElementById('myChart');
+      function load(listParam) {
+        $scope.listUsertoCharttoShowChart =[];
+        for (var i = 1; i <= 12; i++) {
+                var count = 0;
+                listParam.forEach(element => {
+                  if(element.month == i){
+                    count = count + 1;
+                  }
+                })
+                $scope.listUsertoCharttoShowChart.push(count);
+              }
+              $scope.listUsertoCharttoShowChart1 = $scope.listUsertoCharttoShowChart;
+              const ctx = document.getElementById('myChart');
       const myChart = new Chart(ctx, {
         type: 'bar',
         data: {
           labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
           datasets: [{
             label: '# Lưu lượng người đăng kí',
-            data:    $scope.model.listUsertoCharttoShowChart,
+            data: $scope.listUsertoCharttoShowChart1,
             backgroundColor: [
               'rgba(255, 99, 132, 0.2)',
               'rgba(54, 162, 235, 0.2)',
@@ -347,6 +341,11 @@
           }
         }
       });
+              
+      }
+      console.log( $scope.listUsertoCharttoShowChart1 );
+      $scope.loadUsertoChart();
+
     });
 
   </script>
