@@ -506,9 +506,9 @@
               <div class="mb-3">
                 <label for="message-text" class="col-form-label">Chọn lại quyền :</label>
                 <select ng-model ="objectEditUser.RoleAdmin"  class="form-select" aria-label="Default select example"  >
-                  <option ng-value="0">Admin</option>
-                  <option ng-value="1">Cộng tác viên</option>
-                  <option ng-value="2">User</option>
+                  <option ng-value="1">Admin</option>
+                  <option ng-value="2">Cộng tác viên</option>
+                  <option ng-value="3">User</option>
                 </select>
               </div>
               <div class="mb-3">
@@ -570,20 +570,18 @@
       var data = {};
         $('#exampleModal').modal('show');
         $scope.objectEditUser = user;
-       $scope.objectEditUser.RoleAdmin = user.roles[0].id;
- console.log(  $scope.objectEditUser.RoleAdmin);
-      
+        $scope.objectEditUser.RoleAdmin = user.roles[0].id;
       }
       $scope.saveEditUser =function(){
         $scope.objectEditUsertoSave ={};
         $scope.objectEditUser.role =[];
-        if( $scope.objectEditUser.RoleAdmin == 0){
+        if( $scope.objectEditUser.RoleAdmin == 1){
           $scope.objectEditUser.role.push('admin')
         }
-        if( $scope.objectEditUser.RoleAdmin == 1){
+        if( $scope.objectEditUser.RoleAdmin == 2){
           $scope.objectEditUser.role.push('user')
         }
-        if( $scope.objectEditUser.RoleAdmin == 2){
+        if( $scope.objectEditUser.RoleAdmin == 3){
           $scope.objectEditUser.role.push('user')
         }
         if(base64String!=null || base64String !=''){
@@ -593,9 +591,9 @@
         var data =   $scope.objectEditUser;
         $http.post('http://localhost:8012/api/auth/UpdateUser', JSON.stringify(data)).then(function (response) {
           if (response) {
-            if (response.data.status == 200) {
-              
-            }
+           alert(response.data.message)
+           $('#exampleModal').modal('hide');
+           $scope.loadUser(0);
           }
         }, function (response) {
         });  
@@ -618,11 +616,6 @@
         })
       }
       
-      }
-      $scope.Export = function () {
-                $("#tblCustomers").table2excel({
-                    filename: "Table.xls"
-        });
       }
      // theme anrh
      window.imageUploaded =function() {
