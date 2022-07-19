@@ -56,9 +56,9 @@ app.controller('postController', ['$scope', '$http', function ($scope, $http) {
     $scope.post = {
         name: '',
         description: '',
-        listImage :[]
+        ImageEntity :[]
     };
-
+    $scope.files = [];
     $scope.initAddPost = function () {
         var element = angular.element('#new_post');
         element.modal("show");
@@ -66,25 +66,15 @@ app.controller('postController', ['$scope', '$http', function ($scope, $http) {
     // thêm ekidor
      // publish the the post
      $scope.publishPost = function () {
-
-$http.post('script/create.php', {
-    post: $scope.post
-})
-    .then(function success(e) {
-
-        $scope.errors = [];
-        $scope.posts.push(e.data.post);
-
-        var modal_element = angular.element('#new_post');
-        modal_element.modal('hide');
-
-    }, function error(e) {
-        $scope.errors = e.data.errors;
-    });
-
-};
+      var data =$scope.post;
+      $http.post('http://localhost:8012/api/product/addProduct', JSON.stringify(data)).then(function (response) {
+          if (response) {
+           alert(response);
+          }
+        }, function (response) {
+        });  
+      };
 // thêm cho ảnh
-$scope.files = [];
   $scope.$on("fileSelected", function(event, args) {
     var item = args;
     $scope.files.push(item);
@@ -94,9 +84,16 @@ $scope.files = [];
       $scope.$apply(function() {
         item.src = reader.result;
         console.log(reader.result);
+        var string  = reader.result;
+        var log = string.indexOf(",");
+        var srcImage = string.substring(log+1);
+        $scope.objectfile ={
+          url:''
+        }
+        $scope.objectfile.url =srcImage;
+        $scope.post.ImageEntity.push( $scope.objectfile);
       });
     }, false);
-
     if (item.file) {
       reader.readAsDataURL(item.file);
     }
@@ -109,9 +106,7 @@ $scope.files = [];
         require: '?ngModel',
         link: function (scope, elm, attr, ngModel) {
             var ck = CKEDITOR.replace(elm[0]);
-
             if (!ngModel) return;
-
             ck.on('pasteState', function () {
                 scope.$apply(function () {
                     ngModel.$setViewValue(ck.getData());
@@ -218,8 +213,6 @@ app.directive('fileUpload', function() {
                 </div>
             </div>
         </div>
-
-
         <div class="modal fade" tabindex="-1" role="dialog" id="new_post">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -234,9 +227,9 @@ app.directive('fileUpload', function() {
                             <input type="text" ng-model="post.name" class="form-control">
                         </div>
                         <div class="form-group">
-                          <input type="file" multiple file-upload /> {{files.length}}
+                          <input type="file" multiple file-upload />
                           <div ng-repeat="step in files">
-                            <img style="width:50px ;height:50px" ng-src="{{step.src}}" /> 
+                            <img style="width:50px ;height:50px ;margin-bottom: 2px;margin-top: 2px;border: 1px;" ng-src="{{step.src}}" /> 
                           </div>
                         </div>
                         <div class="form-group">
