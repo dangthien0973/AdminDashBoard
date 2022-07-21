@@ -55,27 +55,79 @@
 app.controller('postController', ['$scope', '$http', function ($scope, $http) {
     $scope.post = {
         name: '',
-        description: '',
+        descriptions: '',
         ImageEntity :[]
     };
     $scope.files = [];
+    $scope.model ={};
+    $scope.model.lstProductNews =[];
+    $scope.update_post ={};
     $scope.initAddPost = function () {
         var element = angular.element('#new_post');
         element.modal("show");
     };
     // thêm ekidor
      // publish the the post
+     // load thong tin cho trang tin tuc
      $scope.publishPost = function () {
       var data =$scope.post;
       $http.post('http://localhost:8012/api/product/addProduct', JSON.stringify(data)).then(function (response) {
           if (response) {
-           alert(response);
+           alert(response.data.message);
+           $('#new_post').modal('hide');
+           $scope.loadProduct(0);
           }
         }, function (response) {
         });  
       };
+      $scope.loadProduct = function (index) {
+        $scope.model.index = index;
+        var data = {};
+        $http.post('http://localhost:8012/api/product/getAllProduct?pageIndex='+$scope.model.index, JSON.stringify(data)).then(function (response) {
+          if (response) {
+            if (response.data.status == 200) {
+              $scope.model.lstProductNews = response.data.data.content;
+            }
+            $scope.number = response.data.data.totalPages;
+           $scope.model.showPage = response.data.data.numberOfElements;
+          }
+        }, function (response) {
+        });
+      }
+      $scope.edit = function (object) {
+        $scope.update_post  = object;
+        var modal_element = angular.element('#update_post');
+        modal_element.modal('show');
+    };
+    $scope.updatePost = function () {
+      var data =  $scope.update_post;
+      $http.post('http://localhost:8012/api/product/editProduct', JSON.stringify(data)).then(function (response) {
+          if (response) {
+           alert(response.data.message);
+           $('#update_post').modal('hide');
+           $scope.loadProduct(0);
+          }
+        }, function (response) {
+        });  
+      };
+      $scope.DeleteProduct = function (id) {
+        if (confirm(" Bạn có chắc chắn muốn user này không ? !") == true) {
+        $scope.model.index = id;
+        var data = {};
+        $http.post('http://localhost:8012/api/product/DeleteProduct?id='+$scope.model.index, JSON.stringify(data)).then(function (response) {
+          if (response) {
+            if (response.data.status == 200) {
+              $('.alert').alert();
+              $scope.loadProduct(0);
+            }
+          }
+        }, function (response) {
+        })
+      }
+      }
 // thêm cho ảnh
   $scope.$on("fileSelected", function(event, args) {
+
     var item = args;
     $scope.files.push(item);
     var reader = new FileReader();
@@ -98,6 +150,7 @@ app.controller('postController', ['$scope', '$http', function ($scope, $http) {
       reader.readAsDataURL(item.file);
     }
   });
+  $scope.loadProduct(0);
 }]); 
     </script>
     <script>
@@ -202,17 +255,67 @@ app.directive('fileUpload', function() {
         <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
       </div>
         <div class="container">
-            <h1>Posts</h1>
+            <h1>Bài Đăng</h1>
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <button class="btn btn-primary btn-xs pull-right" ng-click="initAddPost()">Add Post</button>
-                    <h3 class="panel-title">All Post</h3>
+                    <h3 class="panel-title">Bài Đăng</h3>
                 </div>
                 <div class="panel-body">
-
+                  <table  id="headerTable" class="table table-striped table-hover">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Tên bài viết</th>
+                        <th>Ngày tạo bài viết</th>
+                        <th>Người tạo bài viết</th>
+                        <th>Ảnh</th>
+                        <th>Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="product in model.lstProductNews">
+                        <td>{{product.id}}
+                        </td>
+                        <td><a href="#">
+                            {{product.name}}</a></td>
+                        <td>{{product.importDate}}</td>
+                        <td>{{product.createdBy}}</td>
+                      <td>
+                        <div ng-repeat="image in product.imageEntity"> 
+                        <img style="margin-top: 10px;"
+                        data-ng-src="data:image/png;base64,{{image.url}}"
+                        ng-model="updatedPhoto"  class="img-responsive" alt="Cinque Terre" width="80" height="80">
+                      </div>
+                    </td>
+                        <td>
+                          <a ng-click="edit(product)"  class="delete" title="Delete" data-toggle="tooltip"><svg
+                              xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                              class="bi bi-pencil-square" viewBox="0 0 16 16">
+                              <path
+                                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                              <path fill-rule="evenodd"
+                                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                            </svg></a>
+                          <a ng-click="DeleteProduct(product.id)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                              class="bi bi-trash-fill" viewBox="0 0 16 16">
+                              <path
+                                d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
+                            </svg> </a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="clearfix">
+                  <div class="hint-text">Showing<b>{{model.showPage}}</b> out of <b>{{model.totalPage}}</b> entries</div>
+                  <ul class="pagination" ng-repeat="x in [].constructor(number) track by $index">
+                    <li class="page-item"><a ng-click="loadProduct($index)" class="page-link">{{$index +1}}</a></li>
+                  </ul>
                 </div>
             </div>
         </div>
+        <!-- modal add User -->
         <div class="modal fade" tabindex="-1" role="dialog" id="new_post">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -234,7 +337,7 @@ app.directive('fileUpload', function() {
                         </div>
                         <div class="form-group">
                             <label>Post Details:</label>
-                            <textarea ck-editor ng-model="post.description"></textarea>
+                            <textarea ck-editor ng-model="post.descriptions"></textarea>
                         </div>
                         
                     </div>
@@ -247,6 +350,42 @@ app.directive('fileUpload', function() {
             </div>
             <!-- /.modal-dialog -->
         </div>
+        <!-- Modal update User -->
+        <div class="modal fade" tabindex="-1" role="dialog" id="update_post">
+          <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                              aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title">Update Post</h4>
+                  </div>
+                  <div class="modal-body">
+
+                      <ul class="alert alert-danger" ng-if="errors.length > 0">
+                          <li ng-repeat="error in errors">
+                              {{ error }}
+                          </li>
+                      </ul>
+
+                      <div class="form-group">
+                          <label>Name:</label>
+                          <input type="text" ng-model="update_post.name" class="form-control">
+                      </div>
+                      <div class="form-group">
+                          <label>Post Details:</label>
+                          <textarea ck-editor ng-model="update_post.descriptions"></textarea>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      <button type="button" ng-click="updatePost()" class="btn btn-primary">Publish Changes</button>
+                  </div>
+              </div>
+              <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal -->
         <!-- /.modal -->
 
     </div>

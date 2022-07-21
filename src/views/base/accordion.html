@@ -471,8 +471,8 @@
               </table>
               <div class="clearfix">
                 <div class="hint-text">Showing<b>{{model.showPage}}</b> out of <b>{{model.totalPage}}</b> entries</div>
-                <ul class="pagination" ng-repeat="x in [].constructor(4) track by $index">
-                  <li class="page-item"><a ng-click="loadUser($index)" class="page-link">{{$index +1}}</a></li>
+                <ul class="pagination" ng-repeat="x in [].constructor(number) track by $index">
+                  <li class="page-item"><a ng-click="loadUser($index)" class="page-link">{{$index+1}}</a></li>
                 </ul>
               </div>
             </div>
