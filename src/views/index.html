@@ -91,11 +91,11 @@
                   <svg class="nav-icon">
                     <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-account-logout"></use>
                   </svg> Login</a></li>
-              <li class="nav-item"><a class="nav-link" href="register.html" target="_top">
+              <li class="nav-item"><a class="nav-link" href="login.html" target="_top">
                   <svg class="nav-icon">
                     <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-account-logout"></use>
                   </svg> Register</a></li>
-                  <li ng-click="Logout()" class="nav-item"><a class="nav-link" href="register.html" target="_top">
+                  <li ng-click="Logout()" class="nav-item"><a class="nav-link" href="login.html" target="_top">
                     <svg class="nav-icon">
                       <use xlink:href="node_modules/@coreui/icons/sprites/free.svg#cil-account-logout"></use>
                     </svg> Đăng Xuất</a></li>
@@ -657,12 +657,12 @@
     <script src="node_modules/@coreui/utils/dist/coreui-utils.js"></script>
     <script src="js/main.js"></script>
     <script> 
+
     var app = angular.module('myApp', []);
     app.controller('myCtrl', function ($scope, $http) {
       var app =sessionStorage.getItem("loginKey");
       $scope.user ={};
       $scope.user  = JSON.parse(app);
-      $scope.user.imageBase64 =$scope.user.image;
     });
   $scope.Logout =function(){
     sessionStorage.removeItem("loginKey");
