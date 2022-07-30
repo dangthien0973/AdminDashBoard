@@ -60,13 +60,22 @@
         ImageEntity: [],
         categoryId :1,
       };
+      var apps =sessionStorage.getItem("loginKey");
+      $scope.user ={};
+      $scope.user  = JSON.parse(apps);
+      console.log( $scope.user);
       $scope.files = [];
       $scope.model = {};
       $scope.model.lstProductNews = [];
       $scope.update_post = {};
       $scope.initAddPost = function () {
         var element = angular.element('#new_post');
+        if( !$scope.user.roles.includes('ROLE_ADMIN') || !!$scope.user.roles.includes('ROLE_MODERATOR')){
+             alert('Bạn không có thêm người dùng ! chỉ có cộng tác viên và admin mới có quyền thêm sản phẩm')
+          return;
+        }
         element.modal("show");
+     
       };
       // thêm ekidor
       // publish the the post
@@ -97,6 +106,10 @@
         });
       }
       $scope.edit = function (object) {
+        if( !$scope.user.roles.includes('ROLE_ADMIN') || !!$scope.user.roles.includes('ROLE_MODERATOR')){
+             alert('Bạn không có quyền chỉnh sửa sản phẩm ! chỉ có cộng tác viên và admin mới có quyền thêm sản phẩm')
+          return;
+        }
         $scope.update_post = object;
         var modal_element = angular.element('#update_post');
         modal_element.modal('show');
