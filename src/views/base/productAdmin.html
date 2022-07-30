@@ -57,7 +57,8 @@
       $scope.post = {
         name: '',
         descriptions: '',
-        ImageEntity: []
+        ImageEntity: [],
+        categoryId :1,
       };
       $scope.files = [];
       $scope.model = {};
@@ -99,6 +100,7 @@
         $scope.update_post = object;
         var modal_element = angular.element('#update_post');
         modal_element.modal('show');
+        console.log(object);
       };
       $scope.updatePost = function () {
         var data = $scope.update_post;
@@ -143,7 +145,8 @@
             $scope.objectfile = {
               url: ''
             }
-            $scope.objectfile.url = srcImage;
+            $scope.objectfile.url = item.src;
+            console.log($scope.objectfile.url);
             $scope.post.ImageEntity.push($scope.objectfile);
           });
         }, false);
@@ -296,7 +299,7 @@
                   <td>{{product.createdBy}}</td>
                   <td>
                     <div ng-repeat="image in product.imageEntity">
-                      <img style="margin-top: 10px;" data-ng-src="data:image/png;base64,{{image.url}}"
+                      <img style="margin-top: 10px;" data-ng-src="{{image.url}}"
                         ng-model="updatedPhoto" class="img-responsive" alt="Cinque Terre" width="80" height="80">
                     </div>
                   </td>
@@ -342,6 +345,15 @@
                 <input type="text" ng-model="post.name" class="form-control">
               </div>
               <div class="form-group">
+                <label>Chọn thể loại:</label>
+                <select ng-model ="post.categoryId"  class="form-control" aria-label="Default select example"  >
+                  <option ng-value="1">FootBall</option>
+                  <option ng-value="2">BaseKetBall</option>
+                  <option ng-value="3">Tennis</option>
+                  <option ng-value="4">Racing</option>
+                </select>
+              </div>
+              <div class="form-group">
                 <input type="file" multiple file-upload />
                 <div ng-repeat="step in files">
                   <img style="width:50px ;height:50px ;margin-bottom: 2px;margin-top: 2px;border: 1px;"
@@ -384,6 +396,12 @@
                 <label>Name:</label>
                 <input type="text" ng-model="update_post.name" class="form-control">
               </div>
+              <select ng-model ="post.categoryId"  class="form-control" aria-label="Default select example"  >
+                <option ng-value="1">FootBall</option>
+                <option ng-value="2">BaseKetBall</option>
+                <option ng-value="3">Tennis</option>
+                <option ng-value="4">Racing</option>
+              </select>
               <div class="form-group">
                 <label>Post Details:</label>
                 <textarea ck-editor ng-model="update_post.descriptions"></textarea>
@@ -423,5 +441,4 @@
     </div>
   </div>
 </body>
-
 </html>
