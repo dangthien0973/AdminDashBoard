@@ -63,7 +63,6 @@
       var apps =sessionStorage.getItem("loginKey");
       $scope.user ={};
       $scope.user  = JSON.parse(apps);
-      console.log( $scope.user);
       $scope.files = [];
       $scope.model = {};
       $scope.model.lstProductNews = [];
@@ -127,7 +126,7 @@
         });
       };
       $scope.DeleteProduct = function (id) {
-        if (confirm(" Bạn có chắc chắn muốn user này không ? !") == true) {
+        if (confirm(" Bạn có chắc chắn muốn xóa sản phẩm này không? !") == true) {
           $scope.model.index = id;
           var data = {};
           $http.post('http://localhost:8012/api/product/DeleteProduct?id=' + $scope.model.index, JSON.stringify(data)).then(function (response) {

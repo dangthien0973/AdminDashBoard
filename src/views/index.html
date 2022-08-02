@@ -660,14 +660,28 @@
 
     var app = angular.module('myApp', []);
     app.controller('myCtrl', function ($scope, $http) {
-      var app =sessionStorage.getItem("loginKey");
       $scope.user ={};
+      var app =sessionStorage.getItem("loginKey");
+    
       $scope.user  = JSON.parse(app);
-    });
+   
   $scope.Logout =function(){
     sessionStorage.removeItem("loginKey");
     $window.location.href = '/login.html';
   }
+  $scope.loadUser = function(){
+    if( $scope.user ==null|| ! $scope.user){
+      alert('Bạn không có quyền đăng nhập vào hệ thống !! Mời bạn chuyển sang link đăng nhập với quyền là Admin hoặc cộng tác viên ')
+             window.location= '/login.html';
+    }
+        if( !$scope.user.roles.includes('ROLE_ADMIN') || !$scope.user.roles.includes('ROLE_ADMIN')){
+             alert('Bạn không có quyền đăng nhập vào hệ thống !! Mời bạn chuyển sang link đăng nhập với quyền là Admin hoặc cộng tác viên ')
+             window.location= '/login.html';
+         
+        }
+    }
+  $scope.loadUser();
+});
     </script>
   </body>
 </html>
