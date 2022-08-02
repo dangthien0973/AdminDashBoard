@@ -672,10 +672,12 @@
   $scope.loadUser = function(){
     if( $scope.user ==null|| ! $scope.user){
       alert('Bạn không có quyền đăng nhập vào hệ thống !! Mời bạn chuyển sang link đăng nhập với quyền là Admin hoặc cộng tác viên ')
+      sessionStorage.removeItem("loginKey");
              window.location= '/login.html';
     }
         if( !$scope.user.roles.includes('ROLE_ADMIN') || !$scope.user.roles.includes('ROLE_ADMIN')){
              alert('Bạn không có quyền đăng nhập vào hệ thống !! Mời bạn chuyển sang link đăng nhập với quyền là Admin hoặc cộng tác viên ')
+             sessionStorage.removeItem("loginKey");
              window.location= '/login.html';
          
         }

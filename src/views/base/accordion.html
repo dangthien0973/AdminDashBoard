@@ -578,7 +578,9 @@
       var data = {};
         $('#exampleModal').modal('show');
         $scope.objectEditUser = user;
+        console.log(user);
         $scope.objectEditUser.RoleAdmin = user.roles[0].id;
+        $scope.objectEditUser.passwords = user.passwords;
       }
       $scope.saveEditUser =function(){
         $scope.objectEditUsertoSave ={};
